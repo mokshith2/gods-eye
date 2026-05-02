@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>?? GOD'S EYE - Global Monitor</title>
+    
+    <!-- Dependencies -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="https://unpkg.com/@joergdietrich/leaflet.terminator@1.0.0/L.Terminator.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Custom Style -->
+    <link rel="stylesheet" href="config/style.css">
+</head>
+<body>
+    <div class="scanlines"></div>
+    <div id="map"></div>
+    
+    <div class="left-column">
+        <div class="control-panel">
+            <div class="panel-header">
+                <h1>?? GOD'S EYE</h1>
+                <div class="subtitle">Real-Time Global Monitoring</div>
+            </div>
+            <div class="stats-grid">
+                <div class="stat-box"><div class="stat-value aircraft" id="aircraft-count">0</div><div class="stat-label">Aircraft</div></div>
+                <div class="stat-box"><div class="stat-value ships" id="ships-count">0</div><div class="stat-label">Vessels</div></div>
+                <div class="stat-box"><div class="stat-value quakes" id="quakes-count">0</div><div class="stat-label">Quakes</div></div>
+                <div class="stat-box"><div class="stat-value jamming" id="jamming-count">0</div><div class="stat-label">Jamming</div></div>
+                <div class="stat-box"><div class="stat-value news" id="news-count">0</div><div class="stat-label">News</div></div>
+                <div class="stat-box"><div class="stat-value" id="hotspot-count" style="color:var(--accent-red)">0</div><div class="stat-label">Hotspots</div></div>
+            </div>
+            <div class="panel-footer">
+                <span id="last-update">Waiting for data...</span>
+                <span>v2.1 [STABLE]</span>
+            </div>
+        </div>
+
+        <div class="legend">
+            <h4>Legend</h4>
+            <div class="legend-item" onclick="toggleBlink('aircraft', this)"><div class="legend-dot" style="background:var(--accent-green)"></div><span>Commercial Aircraft</span></div>
+            <div class="legend-item" onclick="toggleBlink('ship', this)"><div class="legend-dot" style="background:var(--accent-blue)"></div><span>Maritime Vessels</span></div>
+            <div class="legend-item" onclick="toggleBlink('quake', this)"><div class="legend-dot" style="background:var(--accent-red)"></div><span>Earthquakes</span></div>
+            <div class="legend-item" onclick="toggleBlink('jamming', this)"><div class="legend-dot" style="background:var(--accent-jamming)"></div><span>Jamming Zones</span></div>
+        </div>
+
+        <div class="terminal-panel">
+            <div class="terminal-title">SYS.TERMINAL // RAW STREAM</div>
+            <div class="terminal-lines" id="terminal-lines"></div>
+        </div>
+    </div>
+
+    <div class="right-column">
+        <div class="layer-controls">
+            <h3>Layers</h3>
+            <label class="layer-toggle"><input type="checkbox" id="toggle-aircraft" checked><div class="toggle-box"></div><span>?? Aircraft</span></label>
+            <label class="layer-toggle"><input type="checkbox" id="toggle-ships" checked><div class="toggle-box"></div><span>?? Ships</span></label>
+            <label class="layer-toggle"><input type="checkbox" id="toggle-quakes" checked><div class="toggle-box"></div><span>?? Earthquakes</span></label>
+            <label class="layer-toggle"><input type="checkbox" id="toggle-weather"><div class="toggle-box"></div><span>?? Weather</span></label>
+            <label class="layer-toggle"><input type="checkbox" id="toggle-jamming" checked><div class="toggle-box"></div><span>?? Jamming</span></label>
+            <label class="layer-toggle"><input type="checkbox" id="toggle-iss"><div class="toggle-box"></div><span>?? ISS</span></label>
+        </div>
+
+        <div class="ai-panel">
+            <div class="ai-header"><span>?? GEMINI INTEL // LIVE ASSESSMENT</span><div class="pulsing-dot" id="ai-status-dot"></div></div>
+            <div class="ai-content" id="gemini-output">[SYS] Waiting for API Handshake...</div>
+        </div>
+
+        <div class="news-panel">
+            <div class="news-header">?? Latest News</div>
+            <div class="news-list" id="news-list"></div>
+        </div>
+    </div>
+
+    <!-- Custom Logic -->
+    <script src="config/script.js"></script>
+</body>
+</html>
+

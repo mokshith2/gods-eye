@@ -1,0 +1,54 @@
+services:
+  # ----------------------------------------------------------------------
+  # 1  TELEMETRY FETCHER ENGINE (Self-Installing, No Dockerfile)
+  # ----------------------------------------------------------------------
+  fetcher:
+    image: python:3.9-slim
+    container_name: gods-eye-fetcher
+    restart: always
+    volumes:
+      - .:/app
+      - ./data:/data
+    working_dir: /app
+    env_file:
+      - .env
+    environment:
+      - PYTHONUNBUFFERED=1
+      - TZ=UTC
+    # No Dockerfile needed: we install requirements and run in one command
+    command: >
+      sh -c "pip install --no-cache-dir requests schedule pandas FlightRadar24 pytz skyfield websocket-client &&
+             python config/fetcher.py"
+    healthcheck:
+      test: ["CMD", "python3", "-c", "import os; exit(0 if os.path.exists('/data/data.json') else 1)"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "5"
+
+  # ----------------------------------------------------------------------
+  # 2  OPERATIONAL DASHBOARD (NGINX)
+  # ----------------------------------------------------------------------
+  ui:
+    image: nginx:alpine
+    container_name: gods-eye-ui
+    ports:
+      - "8080:80"
+    volumes:
+      - ./config/index.html:/usr/share/nginx/html/index.html
+      - ./config:/usr/share/nginx/html/config
+      - ./data:/usr/share/nginx/html/data
+    depends_on:
+      fetcher:
+        condition: service_started
+    restart: always
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "5m"
+        max-file: "3"
+
